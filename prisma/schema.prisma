@@ -1,0 +1,58 @@
+
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+    output = "/home/ubuntu/triplepanewindows_wordpress/app/node_modules/.prisma/client"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  firstName   String?
+  lastName    String?
+  phone       String?
+  zipCode     String?
+  projectType String?  // renovation, new_construction, replacement
+  budget      String?  // under_5k, 5k_15k, 15k_30k, over_30k
+  timeline    String?  // immediate, 3_months, 6_months, 1_year
+  source      String?  // email_capture, contact_form, quote_request
+  notes       String?
+  subscribed  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("leads")
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  formType  String   // contact, quote_request, consultation
+  status    String   @default("new") // new, responded, closed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contacts")
+}
+
+model Newsletter {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  firstName   String?
+  interests   String[] // triple_pane, energy_efficiency, brands, installation
+  subscribed  Boolean  @default(true)
+  source      String?  // popup, footer, article_cta, guide_download
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("newsletters")
+}
